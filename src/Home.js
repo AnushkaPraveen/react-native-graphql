@@ -1,13 +1,15 @@
 import React, {useState} from 'react';
 import {View, Text, Button, StyleSheet, ScrollView,Image,Card} from 'react-native';
 import axios from 'axios';
+import { useSelector,useDispatch } from 'react-redux';
+import { SetCMSData } from './redux/reducer';
 
 
 const endpoint = 'http://10.0.2.2:8080/site/hmdb/master/hmdb/api';
 const GRAPHQL_QUERY = `
 {
   guillotine{
-    getChildren(key:"/hmdb/movies" first:50){
+    getChildren(key:"/hmdb/sample" first:50){
           displayName
           data : dataAsJson
       }
@@ -15,7 +17,8 @@ const GRAPHQL_QUERY = `
 }
 `;
 
-const Home = () => {
+const Home = ({navigation}) => {
+  const dispatch=useDispatch();
   const[data,setData]=useState([])
 
   const fetchData = async () => {
@@ -26,13 +29,8 @@ const Home = () => {
         query: GRAPHQL_QUERY,
        
       },
-      /* headers:{
-            'Content-Type': 'application/json',
-           /*  'Access-Control-Allow-Origin': '*',
-            'access-control-allow-headers':'Content-Type',
-            'access-control-allow-methods':'POST,OPTIONS'
-      } */
-    }).then(response => setData(response.data.data.guillotine.getChildren));
+  
+    }).then(response =>(dispatch(SetCMSData(response.data.data.guillotine.getChildren))) /* setData(response.data.data.guillotine.getChildren) */)/* .then(dispatch(SetCMSData(data))) */;
    
   };
 
@@ -43,22 +41,26 @@ const Home = () => {
 </View>
   {data.length != 0 ? (
         <View>
-          {data.map( (cms)=> (
+          {data.map( (cms,i)=> (
             
-            <View style={styles.list} >
+            <View style={styles.list} key={i}>
             <Text style={styles.list_text}>Movie</Text>
-              <Text>{cms.displayName}</Text>
+             {/*  <Text>{cms.displayName}</Text>
               <Text style={styles.list_text}>Subtitle</Text>
               <Text style={styles.list_text}>{cms.data.subtitle}</Text>
               <Text style={styles.list_text}>Abstract</Text>
-              <Text>{cms.data.abstract}</Text>
+              <Text>{cms.data.abstract}</Text> */}
+              <Text>{cms.data.mytextline}</Text>
              
             </View>
             
           ))}
+          
         </View>
       ) : null} 
-
+      <View style={styles.button}>
+          <Button title="Go to Sub Page" onPress={()=>navigation.navigate('SubPage')} />
+</View>
       </ScrollView>
      
 

@@ -10,64 +10,28 @@ import {
   View,
   Button
 } from 'react-native';
-import axios from 'axios';
-import * as Constants from './constants';
-/* import { QueryClient, QueryClientProvider,useQuery } from "react-query"; */
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import{Provider} from 'react-redux'
+import store from './src/redux/store'
 import Home from './src/Home';
+import SubPage from './src/SubPage';
 
 const Stack = createNativeStackNavigator();
 
-/* const endpoint = "https://api.spacex.land/graphql/";
-const FILMS_QUERY = `
-  {
-    launchesPast(limit: 10) {
-      id
-      mission_name
-    }
-  }
-`; */
-
-/* const client = new QueryClient(); */
 const App=()=>{
-  /* const { data, isLoading, error } = useQuery("launches", () => {
-    return axios({
-      url: endpoint,
-      method: "POST",
-      data: {
-        query: FILMS_QUERY
-      }
-    }).then(response => response.data.data);
-  }); */
-
- /*  if (isLoading) return "Loading...";
-  if (error) return <pre>{error.message}</pre>;
- */
-  /* const[gdata,setData]=useState([])
-  
  
-    const fetchData = async () => {
-      const queryResult = await axios.post(
-          Constants.GRAPHQL_API, {
-          query: Constants.GET_DATA
-        }
-      );
-      const result=queryResult.data.rates
-      setData(result)
-     console.log(queryResult);
-    };
- 
-  */
-
   return(
+    <Provider store={store}>
     <NavigationContainer>
-    {/* <QueryClientProvider client={client}> */}
+   
     <Stack.Navigator>
       <Stack.Screen options={{headerShown: false}} name="Home" component={Home} />
+      <Stack.Screen options={{headerShown: false}} name="SubPage" component={SubPage} />
     </Stack.Navigator>
-  {/*   </QueryClientProvider> */}
+  
   </NavigationContainer>
+  </Provider>
 
   
   )}
